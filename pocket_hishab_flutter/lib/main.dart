@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_expense_tracker_app/constants/theme.dart';
@@ -16,14 +17,10 @@ void main() async {
   await DatabaseProvider.initDb();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(
-    MyApp(),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-
   final ThemeController _themeController = Get.put(ThemeController());
 
   @override
@@ -41,10 +38,41 @@ class MyApp extends StatelessWidget {
           theme: Themes.lightTheme,
           themeMode: _themeController.theme,
           darkTheme: Themes.darkTheme,
-          home: child,
+          home: SplashScreen(
+            child: HomeScreen(),
+          ),
         );
       },
-      child: HomeScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  final Widget child;
+
+  SplashScreen({required this.child});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Add a delay of 5 seconds before navigating to the main screen
+    Timer(Duration(seconds: 5), () {
+      Get.off(() => widget.child);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        // Use Image.asset for your splash screen image
+        child: Image.asset('assets/splash_image.png', ),
+      ),
     );
   }
 }
